@@ -44,9 +44,5 @@
 3. 点击下载并出现 `download.aspx`
 4. 右键请求复制为 cURL
 
-## 可配置项
-- 修改 GitHub 链接：
-  - 在 `app.html` 中查找 `https://github.com/Luh1124/drive-curl-generator` 并替换为你的仓库地址
-
 ## 许可
 MIT

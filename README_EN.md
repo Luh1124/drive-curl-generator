@@ -44,9 +44,5 @@ A lightweight front-end tool that generates download commands for Google Drive a
 3. Click download and locate `download.aspx`
 4. Copy as cURL
 
-## Config
-- Update GitHub link:
-  - In `app.html`, search for `https://github.com/Luh1124/drive-download` and replace it with your repo URL
-
 ## License
 MIT
