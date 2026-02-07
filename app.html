@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云盘文件下载工具 - Google Drive & OneDrive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/daisyui/4.12.10/full.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-base-200">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="flex items-center justify-between mb-8">
+            <div class="text-sm text-base-content/60" data-i18n="metaHint">跟随系统主题 · 支持中英文</div>
+            <div class="flex items-center gap-2">
+                <a class="btn btn-sm btn-outline" href="https://github.com/yourname/drive-download" target="_blank" rel="noopener" id="github-link">
+                    <i class="fab fa-github mr-1"></i>
+                    <span data-i18n="githubStar">去 GitHub 点个 Star</span>
+                </a>
+                <button id="theme-toggle" class="btn btn-sm btn-outline" type="button">
+                    <i class="fas fa-moon mr-1"></i>
+                    <span data-i18n="themeToggle">切换主题</span>
+                </button>
+                <button id="lang-toggle" class="btn btn-sm btn-outline" type="button">
+                    <i class="fas fa-language mr-1"></i>
+                    <span data-i18n="langToggle">中文</span>
+                </button>
+            </div>
+        </div>
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-base-content mb-4" data-i18n="title">
+                <i class="fas fa-cloud-download-alt text-blue-500 mr-3"></i>
+                云盘文件下载工具
+            </h1>
+            <p class="text-lg text-base-content/70" data-i18n="subtitle">快速生成 Google Drive 和 OneDrive 大文件下载命令</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Google Drive Section -->
+            <div class="card bg-base-100 shadow-xl transition duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fab fa-google-drive text-green-600 text-2xl"></i>
+                        </div>
+                        <h2 class="card-title text-2xl text-base-content">Google Drive</h2>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium" data-i18n="gdriveLabel">文件ID或分享链接</span>
+                                <span class="label-text-alt text-base-content/60" data-i18n="gdriveLabelAlt">支持直接粘贴分享链接</span>
+                            </label>
+                            <input type="text" id="gdrive-fileid" placeholder="https://drive.google.com/file/d/FILE_ID/view"
+                                   class="input input-bordered w-full" />
+                            <div class="text-sm text-base-content/60 mt-1" data-i18n-html="gdriveExample">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                示例链接: https://drive.google.com/file/d/<span class="text-blue-600 font-mono">1nJXhoEcy3KTExr17I7BXqY5Y9Lx_-n-9</span>/view
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium" data-i18n="filenameLabel">保存文件名</span>
+                            </label>
+                            <input type="text" id="gdrive-filename" placeholder="model.pth"
+                                   class="input input-bordered w-full" />
+                        </div>
+                        
+                        <button onclick="generateGDriveCommand()" class="btn btn-success w-full">
+                            <i class="fas fa-magic mr-2"></i>
+                            <span data-i18n="generateBtn">生成下载命令</span>
+                        </button>
+
+                        <div id="gdrive-result" class="hidden">
+                            <div class="divider"></div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium" data-i18n="commandLabel">下载命令</span>
+                                    <button onclick="copyToClipboard('gdrive-command')" class="btn btn-ghost btn-xs" type="button">
+                                        <i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">复制</span>
+                                    </button>
+                                </label>
+
+                                <textarea id="gdrive-command" class="textarea textarea-bordered font-mono text-sm"
+                                          rows="4" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OneDrive Section -->
+            <div class="card bg-base-100 shadow-xl transition duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl">
+                <div class="card-body">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fab fa-microsoft text-blue-600 text-2xl"></i>
+                        </div>
+                        <h2 class="card-title text-2xl text-base-content">OneDrive</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="alert alert-info mb-4">
+                            <div>
+                                <i class="fas fa-info-circle mr-2"></i>
+                                <span data-i18n="onedriveStepsTitle">获取下载链接步骤：</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start">
+                                <span class="badge badge-primary mr-3 mt-0.5">1</span>
+                                <span data-i18n="onedriveStep1">浏览器中右键点击文件，选择"检查"或按F12</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="badge badge-primary mr-3 mt-0.5">2</span>
+                                <span data-i18n="onedriveStep2">切换到 Network 标签页</span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="badge badge-primary mr-3 mt-0.5">3</span>
+                                <span data-i18n-html="onedriveStep3">搜索 <code>download.aspx</code></span>
+                            </div>
+                            <div class="flex items-start">
+                                <span class="badge badge-primary mr-3 mt-0.5">4</span>
+                                <span data-i18n="onedriveStep4">点击文件下载，复制出现的下载链接</span>
+                            </div>
+                        </div>
+                        <div class="form-control mt-6">
+                            <label class="label">
+                                <span class="label-text font-medium" data-i18n="onedriveCurlLabel">cURL 下载命令</span>
+                                <span class="label-text-alt text-base-content/60" data-i18n="onedriveCurlAlt">请粘贴完整 cURL</span>
+                            </label>
+                            <textarea id="onedrive-url" placeholder="curl 'https://.../download.aspx?UniqueId=...' -H 'Cookie: ...'"
+                                      class="textarea textarea-bordered w-full" rows="3"></textarea>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium" data-i18n="filenameLabel">保存文件名</span>
+                            </label>
+                            <input type="text" id="onedrive-filename" placeholder="model.pth"
+                                   class="input input-bordered w-full" />
+                        </div>
+                        <button onclick="generateOneDriveCommand()" class="btn btn-info w-full">
+                            <i class="fas fa-magic mr-2"></i>
+                            <span data-i18n="generateBtn">生成下载命令</span>
+                        </button>
+                        <div id="onedrive-result" class="hidden">
+                            <div class="divider"></div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium" data-i18n="commandLabel">下载命令</span>
+                                    <button onclick="copyToClipboard('onedrive-command')" class="btn btn-ghost btn-xs" type="button">
+                                        <i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">复制</span>
+                                    </button>
+                                </label>
+                                <textarea id="onedrive-command" class="textarea textarea-bordered font-mono text-sm"
+                                          rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Usage Tips -->
+        <div class="mt-12">
+            <div class="card bg-base-100 border border-base-200 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl">
+                <div class="card-body">
+                    <h3 class="card-title text-base-content mb-4">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        <span data-i18n="tipsTitle">使用提示</span>
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-green-700 flex items-center">
+                                <i class="fab fa-google-drive mr-2"></i>Google Drive 注意事项
+                            </h4>
+                            <ul class="space-y-2 text-sm text-base-content/70">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                    <span data-i18n="gdriveTip1">确保文件分享权限设置为"任何知道链接的人"</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                    <span data-i18n="gdriveTip2">大文件下载会自动处理确认令牌</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                                    <span data-i18n="gdriveTip3">下载完成后cookies会自动清理</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-blue-700 flex items-center">
+                                <i class="fab fa-microsoft mr-2"></i>OneDrive 注意事项
+                            </h4>
+                            <ul class="space-y-2 text-sm text-base-content/70">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                                    <span data-i18n="onedriveTip1">需要手动获取下载链接，无法直接wget</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                                    <span data-i18n="onedriveTip2">获取的链接有时效性，建议立即使用</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                                    <span data-i18n="onedriveTip3">支持大文件断点续传</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div class="mt-12 text-center text-base-content/60 text-sm">
+            <p data-i18n-html="footerText">基于 CSDN 博客文章实现 |
+                <a href="https://jdgqr.blog.csdn.net/article/details/142060917" target="_blank" class="text-blue-500 hover:underline">
+                    查看原文 <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+    <script>
+        const STORAGE_THEME = 'drive_download_theme';
+        const STORAGE_LANG = 'drive_download_lang';
+        const I18N = {
+            zh: {
+                metaHint: '跟随系统主题 · 支持中英文',
+                githubStar: '去 GitHub 点个 Star',
+                themeToggle: '切换主题',
+                langToggle: '中文',
+                title: '云盘文件下载工具',
+                subtitle: '快速生成 Google Drive 和 OneDrive 大文件下载命令',
+                gdriveLabel: '文件ID或分享链接',
+                gdriveLabelAlt: '支持直接粘贴分享链接',
+                gdriveExample: '<i class="fas fa-info-circle mr-1"></i>示例链接: https://drive.google.com/file/d/<span class="text-blue-600 font-mono">1nJXhoEcy3KTExr17I7BXqY5Y9Lx_-n-9</span>/view',
+                filenameLabel: '保存文件名',
+                generateBtn: '生成下载命令',
+                commandLabel: '下载命令',
+                copyBtn: '复制',
+                copiedBtn: '已复制',
+                onedriveStepsTitle: '获取下载链接步骤：',
+                onedriveStep1: '浏览器中右键点击文件，选择"检查"或按F12',
+                onedriveStep2: '切换到 Network 标签页',
+                onedriveStep3: '搜索 <code>download.aspx</code>',
+                onedriveStep4: '点击文件下载，复制出现的下载链接',
+                onedriveCurlLabel: 'cURL 下载命令',
+                onedriveCurlAlt: '请粘贴完整 cURL',
+                tipsTitle: '使用提示',
+                gdriveTip1: '确保文件分享权限设置为"任何知道链接的人"',
+                gdriveTip2: '大文件下载会自动处理确认令牌',
+                gdriveTip3: '下载完成后cookies会自动清理',
+                onedriveTip1: '需要手动获取下载链接，无法直接wget',
+                onedriveTip2: '获取的链接有时效性，建议立即使用',
+                onedriveTip3: '支持大文件断点续传',
+                footerText: '基于 CSDN 博客文章实现 | <a href="https://jdgqr.blog.csdn.net/article/details/142060917" target="_blank" class="text-blue-500 hover:underline">查看原文 <i class="fas fa-external-link-alt ml-1"></i></a>',
+                gdrivePlaceholder: 'https://drive.google.com/file/d/FILE_ID/view',
+                filenamePlaceholder: 'model.pth',
+                onedrivePlaceholder: "curl 'https://.../download.aspx?UniqueId=...' -H 'Cookie: ...'"
+            },
+            en: {
+                metaHint: 'Follow system theme · CN/EN',
+                githubStar: 'Star on GitHub',
+                themeToggle: 'Theme',
+                langToggle: 'English',
+                title: 'Cloud Download Tool',
+                subtitle: 'Generate download commands for Google Drive and OneDrive',
+                gdriveLabel: 'File ID or Share Link',
+                gdriveLabelAlt: 'Paste share link directly',
+                gdriveExample: '<i class="fas fa-info-circle mr-1"></i>Example: https://drive.google.com/file/d/<span class="text-blue-600 font-mono">1nJXhoEcy3KTExr17I7BXqY5Y9Lx_-n-9</span>/view',
+                filenameLabel: 'Save as',
+                generateBtn: 'Generate Command',
+                commandLabel: 'Command',
+                copyBtn: 'Copy',
+                copiedBtn: 'Copied',
+                onedriveStepsTitle: 'How to get the download link:',
+                onedriveStep1: 'Right click the file, choose "Inspect" or press F12',
+                onedriveStep2: 'Switch to the Network tab',
+                onedriveStep3: 'Search for <code>download.aspx</code>',
+                onedriveStep4: 'Click download and copy the request URL',
+                onedriveCurlLabel: 'cURL Command',
+                onedriveCurlAlt: 'Paste the full cURL',
+                tipsTitle: 'Tips',
+                gdriveTip1: 'Make sure share permission is "Anyone with the link"',
+                gdriveTip2: 'Large files auto-handle confirmation tokens',
+                gdriveTip3: 'Cookies are cleaned after download',
+                onedriveTip1: 'Manual link capture is required',
+                onedriveTip2: 'Links expire quickly; use immediately',
+                onedriveTip3: 'Supports resume for large files',
+                footerText: 'Based on a CSDN blog post | <a href="https://jdgqr.blog.csdn.net/article/details/142060917" target="_blank" class="text-blue-500 hover:underline">Read article <i class="fas fa-external-link-alt ml-1"></i></a>',
+                gdrivePlaceholder: 'https://drive.google.com/file/d/FILE_ID/view',
+                filenamePlaceholder: 'model.pth',
+                onedrivePlaceholder: "curl 'https://.../download.aspx?UniqueId=...' -H 'Cookie: ...'"
+            }
+        };
+
+        function applyThemeFromSystem() {
+            const savedTheme = localStorage.getItem(STORAGE_THEME);
+            const media = window.matchMedia('(prefers-color-scheme: dark)');
+            const setTheme = (isDark) => {
+                document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            };
+            if (savedTheme) {
+                setTheme(savedTheme === 'dark');
+            } else {
+                setTheme(media.matches);
+                if (typeof media.addEventListener === 'function') {
+                    media.addEventListener('change', (event) => setTheme(event.matches));
+                } else if (typeof media.addListener === 'function') {
+                    media.addListener((event) => setTheme(event.matches));
+                }
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem(STORAGE_THEME, next);
+        }
+
+        function applyLanguage(lang) {
+            const dict = I18N[lang] || I18N.zh;
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+                const key = el.getAttribute('data-i18n-html');
+                if (dict[key]) el.innerHTML = dict[key];
+            });
+            document.getElementById('gdrive-fileid').setAttribute('placeholder', dict.gdrivePlaceholder);
+            document.getElementById('gdrive-filename').setAttribute('placeholder', dict.filenamePlaceholder);
+            document.getElementById('onedrive-filename').setAttribute('placeholder', dict.filenamePlaceholder);
+            document.getElementById('onedrive-url').setAttribute('placeholder', dict.onedrivePlaceholder);
+        }
+
+        function toggleLanguage() {
+            const current = localStorage.getItem(STORAGE_LANG) || 'zh';
+            const next = current === 'zh' ? 'en' : 'zh';
+            localStorage.setItem(STORAGE_LANG, next);
+            applyLanguage(next);
+        }
+
+        applyThemeFromSystem();
+        applyLanguage(localStorage.getItem(STORAGE_LANG) || 'zh');
+
+        function generateGDriveCommand() {
+            const input = document.getElementById('gdrive-fileid').value.trim();
+            const fileName = document.getElementById('gdrive-filename').value.trim() || 'downloaded_file';
+            let fileId = input;
+
+            if (!input) {
+                alert('请输入文件ID或分享链接');
+                return;
+            }
+
+            const urlMatch = input.match(/\/d\/([^\/?]+)/);
+            const idMatch = input.match(/[?&]id=([^&]+)/);
+            if (urlMatch) {
+                fileId = urlMatch[1];
+            } else if (idMatch) {
+                fileId = idMatch[1];
+            }
+
+            if (!fileId) {
+                alert('未能解析到文件ID');
+                return;
+            }
+
+            const command = `wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=\\$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=${fileId}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\\\1\\\\n/p')&id=${fileId}" -O ${fileName} && rm -rf /tmp/cookies.txt`;
+
+            document.getElementById('gdrive-command').value = command;
+            document.getElementById('gdrive-result').classList.remove('hidden');
+        }
+
+        function generateOneDriveCommand() {
+            const input = document.getElementById('onedrive-url').value.trim();
+            const fileName = document.getElementById('onedrive-filename').value.trim() || 'downloaded_file';
+
+            if (!input) {
+                alert('请输入cURL下载命令');
+                return;
+            }
+
+            let command = input;
+            if (!/^curl\s+/i.test(input)) {
+                command = `curl '${input}'`;
+            }
+
+            command = command.replace(/--output\s+\S+/g, '').replace(/\s+-o\s+\S+/g, '').trim();
+            command = `${command} --output ${fileName}`;
+
+            document.getElementById('onedrive-command').value = command;
+            document.getElementById('onedrive-result').classList.remove('hidden');
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            const lang = localStorage.getItem(STORAGE_LANG) || 'zh';
+            const dict = I18N[lang] || I18N.zh;
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+            button.innerHTML = `<i class="fas fa-check mr-1"></i>${dict.copiedBtn}`;
+            button.classList.add('btn-success');
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('btn-success');
+            }, 2000);
+        }
+
+        document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        document.getElementById('lang-toggle').addEventListener('click', toggleLanguage);
+
+        document.getElementById('gdrive-fileid').addEventListener('focus', function() {
+            if (!this.value) {
+                const lang = localStorage.getItem(STORAGE_LANG) || 'zh';
+                const dict = I18N[lang] || I18N.zh;
+                this.placeholder = dict.gdrivePlaceholder;
+            }
+        });
+        document.getElementById('gdrive-filename').addEventListener('focus', function() {
+            if (!this.value) {
+                const lang = localStorage.getItem(STORAGE_LANG) || 'zh';
+                const dict = I18N[lang] || I18N.zh;
+                this.placeholder = dict.filenamePlaceholder;
+            }
+        });
+    </script>
+</body>
+</html>
