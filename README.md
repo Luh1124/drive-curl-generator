@@ -11,8 +11,7 @@
 - 中英文界面切换
 
 ## 在线预览
-- GitHub Pages：`https://<你的用户名>.github.io/<仓库名>/`
-- 自定义域名：`https://your-domain.com/`
+- GitHub Pages：`https://luh1124.github.io/drive-curl-generator/`
 
 ## 本地使用
 1. 直接打开 `app.html`
@@ -23,21 +22,31 @@
 2. 仓库设置 → Pages → 选择分支（如 `main`）与根目录
 3. 等待部署完成，访问生成的链接
 
-## 使用说明
-### Google Drive
-1. 粘贴分享链接或文件 ID
-2. 输入保存文件名
-3. 点击生成命令并复制使用
+## 使用教程
+### Google Drive（支持直接粘贴分享链接）
+1. 复制分享链接或文件 ID
+2. 粘贴到「文件ID或分享链接」
+3. 输入保存文件名
+4. 点击「生成下载命令」并复制使用
 
-### OneDrive
-1. 打开分享链接 → F12 → Network
-2. 点击下载，找到 `download.aspx`
-3. 右键请求 → Copy as cURL
-4. 粘贴 cURL，生成命令并复制
+### OneDrive（文字流程）
+1. 打开 OneDrive 分享链接
+2. 按 `F12` 打开开发者工具，切换到 `Network`/`网络`
+3. 点击页面的「下载」
+4. 在请求列表中找到 `download.aspx`
+5. 右键该请求 → `Copy` → `Copy as cURL`
+6. 将完整 cURL 粘贴到输入框，生成命令并复制使用
+
+### OneDrive（图文流程占位）
+> 你可以按以下顺序补充截图或录屏：
+1. 打开分享链接页面
+2. `F12` → `Network`/`网络` 面板
+3. 点击下载并出现 `download.aspx`
+4. 右键请求复制为 cURL
 
 ## 可配置项
 - 修改 GitHub 链接：
-  - 在 `app.html` 中查找 `https://github.com/yourname/drive-download` 并替换为你的仓库地址
+  - 在 `app.html` 中查找 `https://github.com/Luh1124/drive-download` 并替换为你的仓库地址
 
 ## 许可
 MIT

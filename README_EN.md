@@ -11,8 +11,7 @@ A lightweight front-end tool that generates download commands for Google Drive a
 - CN/EN language switch
 
 ## Live Demo
-- GitHub Pages: `https://<your-username>.github.io/<repo-name>/`
-- Custom domain: `https://your-domain.com/`
+- GitHub Pages: `https://luh1124.github.io/drive-curl-generator/`
 
 ## Local Usage
 1. Open `app.html` directly
@@ -24,20 +23,30 @@ A lightweight front-end tool that generates download commands for Google Drive a
 3. Wait for deployment and open the generated URL
 
 ## How to Use
-### Google Drive
-1. Paste a share link or file ID
-2. Enter a filename
-3. Generate the command and copy
+### Google Drive (share link supported)
+1. Copy the share link or file ID
+2. Paste into the input
+3. Enter a filename
+4. Generate the command and copy
 
-### OneDrive
-1. Open the share link → F12 → Network
-2. Click download, find `download.aspx`
-3. Right-click the request → Copy as cURL
-4. Paste cURL, generate and copy
+### OneDrive (text guide)
+1. Open the share link
+2. Press `F12` and switch to `Network`
+3. Click the page's Download button
+4. Find the request named `download.aspx`
+5. Right-click it → `Copy` → `Copy as cURL`
+6. Paste the full cURL, generate and copy
+
+### OneDrive (visual guide placeholder)
+> You can add screenshots or a short video following this order:
+1. Open the share page
+2. `F12` → `Network` panel
+3. Click download and locate `download.aspx`
+4. Copy as cURL
 
 ## Config
 - Update GitHub link:
-  - In `app.html`, search for `https://github.com/yourname/drive-download` and replace it with your repo URL
+  - In `app.html`, search for `https://github.com/Luh1124/drive-download` and replace it with your repo URL
 
 ## License
 MIT
