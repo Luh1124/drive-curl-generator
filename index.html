@@ -220,6 +220,43 @@
                 </div>
             </div>
         </div>
+        <!-- Tutorial -->
+        <div class="mt-12">
+            <div class="card bg-base-100 border border-base-200 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-xl">
+                <div class="card-body">
+                    <h3 class="card-title text-base-content mb-6">
+                        <i class="fas fa-book-open text-indigo-500 mr-2"></i>
+                        <span data-i18n="tutorialTitle">使用教程</span>
+                    </h3>
+                    <div role="tablist" class="tabs tabs-boxed mb-4">
+                        <input type="radio" name="tutorial_tabs" role="tab" class="tab" aria-label="Google Drive" data-i18n-attr="tabGDrive:aria-label" checked />
+                        <div role="tabpanel" class="tab-content p-4 bg-base-200/60 rounded-box">
+                            <ol class="list-decimal ml-5 space-y-2 text-base-content/80">
+                                <li data-i18n="gdriveStep1">复制分享链接或文件 ID</li>
+                                <li data-i18n="gdriveStep2">粘贴到「文件ID或分享链接」</li>
+                                <li data-i18n="gdriveStep3">输入保存文件名</li>
+                                <li data-i18n="gdriveStep4">点击「生成下载命令」并复制使用</li>
+                            </ol>
+                        </div>
+
+                        <input type="radio" name="tutorial_tabs" role="tab" class="tab" aria-label="OneDrive" data-i18n-attr="tabOneDrive:aria-label" />
+                        <div role="tabpanel" class="tab-content p-4 bg-base-200/60 rounded-box">
+                            <ol class="list-decimal ml-5 space-y-2 text-base-content/80">
+                                <li data-i18n="onedriveGuide1">打开 OneDrive 分享链接</li>
+                                <li data-i18n="onedriveGuide2">按 F12 打开开发者工具，切换到 Network/网络</li>
+                                <li data-i18n-html="onedriveGuide3">点击下载并找到 <code>download.aspx</code></li>
+                                <li data-i18n="onedriveGuide4">右键请求 → Copy → Copy as cURL</li>
+                                <li data-i18n="onedriveGuide5">粘贴完整 cURL，生成命令并复制</li>
+                            </ol>
+                            <div class="mt-4 grid md:grid-cols-2 gap-4">
+                                <img src="statics/step1.png" alt="OneDrive Step 1" class="rounded-lg border border-base-200" />
+                                <img src="statics/step2.png" alt="OneDrive Step 2" class="rounded-lg border border-base-200" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- Footer -->
         <div class="mt-12 text-center text-base-content/60 text-sm">
             <p data-i18n-html="footerText">基于 CSDN 博客文章实现 |
@@ -256,6 +293,18 @@
                 onedriveCurlLabel: 'cURL 下载命令',
                 onedriveCurlAlt: '请粘贴完整 cURL',
                 tipsTitle: '使用提示',
+                tutorialTitle: '使用教程',
+                tabGDrive: 'Google Drive',
+                tabOneDrive: 'OneDrive',
+                gdriveStep1: '复制分享链接或文件 ID',
+                gdriveStep2: '粘贴到「文件ID或分享链接」',
+                gdriveStep3: '输入保存文件名',
+                gdriveStep4: '点击「生成下载命令」并复制使用',
+                onedriveGuide1: '打开 OneDrive 分享链接',
+                onedriveGuide2: '按 F12 打开开发者工具，切换到 Network/网络',
+                onedriveGuide3: '点击下载并找到 <code>download.aspx</code>',
+                onedriveGuide4: '右键请求 → Copy → Copy as cURL',
+                onedriveGuide5: '粘贴完整 cURL，生成命令并复制',
                 gdriveTip1: '确保文件分享权限设置为"任何知道链接的人"',
                 gdriveTip2: '大文件下载会自动处理确认令牌',
                 gdriveTip3: '下载完成后cookies会自动清理',
@@ -292,6 +341,18 @@
                 onedriveCurlLabel: 'cURL Command',
                 onedriveCurlAlt: 'Paste the full cURL',
                 tipsTitle: 'Tips',
+                tutorialTitle: 'Tutorial',
+                tabGDrive: 'Google Drive',
+                tabOneDrive: 'OneDrive',
+                gdriveStep1: 'Copy the share link or file ID',
+                gdriveStep2: 'Paste into "File ID or Share Link"',
+                gdriveStep3: 'Enter a filename',
+                gdriveStep4: 'Generate the command and copy it',
+                onedriveGuide1: 'Open the OneDrive share link',
+                onedriveGuide2: 'Press F12 and switch to Network',
+                onedriveGuide3: 'Click download and find <code>download.aspx</code>',
+                onedriveGuide4: 'Right-click → Copy → Copy as cURL',
+                onedriveGuide5: 'Paste the full cURL and copy the command',
                 gdriveTip1: 'Make sure share permission is "Anyone with the link"',
                 gdriveTip2: 'Large files auto-handle confirmation tokens',
                 gdriveTip3: 'Cookies are cleaned after download',
@@ -341,6 +402,11 @@
             document.querySelectorAll('[data-i18n-html]').forEach((el) => {
                 const key = el.getAttribute('data-i18n-html');
                 if (dict[key]) el.innerHTML = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-attr]').forEach((el) => {
+                const raw = el.getAttribute('data-i18n-attr');
+                const [key, attr] = raw.split(':');
+                if (dict[key] && attr) el.setAttribute(attr, dict[key]);
             });
             document.getElementById('gdrive-fileid').setAttribute('placeholder', dict.gdrivePlaceholder);
             document.getElementById('gdrive-filename').setAttribute('placeholder', dict.filenamePlaceholder);

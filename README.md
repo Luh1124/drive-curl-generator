@@ -37,12 +37,14 @@
 5. 右键该请求 → `Copy` → `Copy as cURL`
 6. 将完整 cURL 粘贴到输入框，生成命令并复制使用
 
-### OneDrive（图文流程占位）
-> 你可以按以下顺序补充截图或录屏：
+### OneDrive（图文流程）
 1. 打开分享链接页面
 2. `F12` → `Network`/`网络` 面板
 3. 点击下载并出现 `download.aspx`
 4. 右键请求复制为 cURL
+
+![OneDrive 步骤 1](statics/step1.png)
+![OneDrive 步骤 2](statics/step2.png)
 
 ## 许可
 MIT

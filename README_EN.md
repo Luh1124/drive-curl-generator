@@ -37,12 +37,14 @@ A lightweight front-end tool that generates download commands for Google Drive a
 5. Right-click it → `Copy` → `Copy as cURL`
 6. Paste the full cURL, generate and copy
 
-### OneDrive (visual guide placeholder)
-> You can add screenshots or a short video following this order:
+### OneDrive (visual guide)
 1. Open the share page
 2. `F12` → `Network` panel
 3. Click download and locate `download.aspx`
 4. Copy as cURL
+
+![OneDrive Step 1](statics/step1.png)
+![OneDrive Step 2](statics/step2.png)
 
 ## License
 MIT
