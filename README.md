@@ -46,7 +46,7 @@
 
 ## 可配置项
 - 修改 GitHub 链接：
-  - 在 `app.html` 中查找 `https://github.com/Luh1124/drive-download` 并替换为你的仓库地址
+  - 在 `app.html` 中查找 `https://github.com/Luh1124/drive-curl-generator` 并替换为你的仓库地址
 
 ## 许可
 MIT
