@@ -229,7 +229,7 @@
                         <span data-i18n="tutorialTitle">使用教程</span>
                     </h3>
                     <div role="tablist" class="tabs tabs-boxed mb-4">
-                        <input type="radio" name="tutorial_tabs" role="tab" class="tab" aria-label="Google Drive" data-i18n-attr="tabGDrive:aria-label" checked />
+                        <input type="radio" name="tutorial_tabs" role="tab" class="tab whitespace-nowrap px-4" aria-label="Google Drive" data-i18n-attr="tabGDrive:aria-label" checked />
                         <div role="tabpanel" class="tab-content p-4 bg-base-200/60 rounded-box">
                             <ol class="list-decimal ml-5 space-y-2 text-base-content/80">
                                 <li data-i18n="gdriveStep1">复制分享链接或文件 ID</li>
@@ -239,7 +239,7 @@
                             </ol>
                         </div>
 
-                        <input type="radio" name="tutorial_tabs" role="tab" class="tab" aria-label="OneDrive" data-i18n-attr="tabOneDrive:aria-label" />
+                        <input type="radio" name="tutorial_tabs" role="tab" class="tab whitespace-nowrap px-4" aria-label="OneDrive" data-i18n-attr="tabOneDrive:aria-label" />
                         <div role="tabpanel" class="tab-content p-4 bg-base-200/60 rounded-box">
                             <ol class="list-decimal ml-5 space-y-2 text-base-content/80">
                                 <li data-i18n="onedriveGuide1">打开 OneDrive 分享链接</li>
@@ -249,8 +249,12 @@
                                 <li data-i18n="onedriveGuide5">粘贴完整 cURL，生成命令并复制</li>
                             </ol>
                             <div class="mt-4 grid md:grid-cols-2 gap-4">
-                                <img src="statics/step1.png" alt="OneDrive Step 1" class="rounded-lg border border-base-200" />
-                                <img src="statics/step2.png" alt="OneDrive Step 2" class="rounded-lg border border-base-200" />
+                                <button type="button" class="focus:outline-none" onclick="openImage('statics/step1.png', 'OneDrive Step 1')">
+                                    <img src="statics/step1.png" alt="OneDrive Step 1" class="rounded-lg border border-base-200 hover:opacity-90 transition" />
+                                </button>
+                                <button type="button" class="focus:outline-none" onclick="openImage('statics/step2.png', 'OneDrive Step 2')">
+                                    <img src="statics/step2.png" alt="OneDrive Step 2" class="rounded-lg border border-base-200 hover:opacity-90 transition" />
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -266,6 +270,15 @@
             </p>
         </div>
     </div>
+    <!-- Image Preview Modal -->
+    <dialog id="image-preview" class="modal">
+        <div class="modal-box max-w-4xl p-2">
+            <img id="preview-image" src="" alt="" class="w-full rounded-lg" />
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button aria-label="close"></button>
+        </form>
+    </dialog>
     <script>
         const STORAGE_THEME = 'drive_download_theme';
         const STORAGE_LANG = 'drive_download_lang';
@@ -489,6 +502,18 @@
                 button.innerHTML = originalText;
                 button.classList.remove('btn-success');
             }, 2000);
+        }
+
+        function openImage(src, alt) {
+            const modal = document.getElementById('image-preview');
+            const img = document.getElementById('preview-image');
+            img.src = src;
+            img.alt = alt || '';
+            if (typeof modal.showModal === 'function') {
+                modal.showModal();
+            } else {
+                modal.setAttribute('open', 'true');
+            }
         }
 
         document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
