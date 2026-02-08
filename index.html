@@ -78,7 +78,7 @@
                             <div class="form-control">
                                 <label class="label">
                                     <span class="label-text font-medium" data-i18n="commandLabel">下载命令</span>
-                                    <button onclick="copyToClipboard('gdrive-command')" class="btn btn-ghost btn-xs" type="button">
+                                    <button onclick="copyToClipboard('gdrive-command')" class="btn btn-ghost btn-xs" type="button" data-copy-btn="gdrive">
                                         <i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">复制</span>
                                     </button>
                                 </label>
@@ -151,7 +151,7 @@
                             <div class="form-control">
                                 <label class="label">
                                     <span class="label-text font-medium" data-i18n="commandLabel">下载命令</span>
-                                    <button onclick="copyToClipboard('onedrive-command')" class="btn btn-ghost btn-xs" type="button">
+                                    <button onclick="copyToClipboard('onedrive-command')" class="btn btn-ghost btn-xs" type="button" data-copy-btn="onedrive">
                                         <i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">复制</span>
                                     </button>
                                 </label>
@@ -425,6 +425,7 @@
             document.getElementById('gdrive-filename').setAttribute('placeholder', dict.filenamePlaceholder);
             document.getElementById('onedrive-filename').setAttribute('placeholder', dict.filenamePlaceholder);
             document.getElementById('onedrive-url').setAttribute('placeholder', dict.onedrivePlaceholder);
+            resetCopyButtons();
         }
 
         function toggleLanguage() {
@@ -460,10 +461,11 @@
                 return;
             }
 
-            const command = `wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=\\$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=${fileId}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\\\1\\\\n/p')&id=${fileId}" -O ${fileName} && rm -rf /tmp/cookies.txt`;
+            const command = `wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=${fileId}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\\\1\\\\n/p')&id=${fileId}" -O ${fileName} && rm -rf /tmp/cookies.txt`;
 
             document.getElementById('gdrive-command').value = command;
             document.getElementById('gdrive-result').classList.remove('hidden');
+            resetCopyButtons();
         }
 
         function generateOneDriveCommand() {
@@ -485,6 +487,7 @@
 
             document.getElementById('onedrive-command').value = command;
             document.getElementById('onedrive-result').classList.remove('hidden');
+            resetCopyButtons();
         }
         
         function copyToClipboard(elementId) {
@@ -495,13 +498,22 @@
             const lang = localStorage.getItem(STORAGE_LANG) || 'zh';
             const dict = I18N[lang] || I18N.zh;
             const button = event.target.closest('button');
-            const originalText = button.innerHTML;
+            const originalText = `<i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">${dict.copyBtn}</span>`;
             button.innerHTML = `<i class="fas fa-check mr-1"></i>${dict.copiedBtn}`;
             button.classList.add('btn-success');
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.classList.remove('btn-success');
             }, 2000);
+        }
+
+        function resetCopyButtons() {
+            const lang = localStorage.getItem(STORAGE_LANG) || 'zh';
+            const dict = I18N[lang] || I18N.zh;
+            document.querySelectorAll('[data-copy-btn]').forEach((button) => {
+                button.classList.remove('btn-success');
+                button.innerHTML = `<i class="fas fa-copy mr-1"></i><span data-i18n="copyBtn">${dict.copyBtn}</span>`;
+            });
         }
 
         function openImage(src, alt) {
