@@ -14,7 +14,7 @@
 - GitHub Pages：`https://luh1124.github.io/drive-curl-generator/`
 
 ## 本地使用
-1. 直接打开 `app.html`
+1. 直接打开 `index.html`
 2. 或用任意静态服务器托管（如 `python -m http.server`）
 
 ## 部署到 GitHub Pages

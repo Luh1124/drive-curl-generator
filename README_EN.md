@@ -14,7 +14,7 @@ A lightweight front-end tool that generates download commands for Google Drive a
 - GitHub Pages: `https://luh1124.github.io/drive-curl-generator/`
 
 ## Local Usage
-1. Open `app.html` directly
+1. Open `index.html` directly
 2. Or host it with any static server (e.g. `python -m http.server`)
 
 ## Deploy to GitHub Pages
