@@ -47,4 +47,4 @@ A lightweight front-end tool that generates download commands for Google Drive a
 ![OneDrive Step 2](statics/step2.png)
 
 ## License
-MIT
+CC BY 4.0

@@ -47,4 +47,4 @@
 ![OneDrive 步骤 2](statics/step2.png)
 
 ## 许可
-MIT
+CC BY 4.0
